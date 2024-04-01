@@ -1,16 +1,19 @@
 public class Game {
     private Board board;
+
     private player currentPlayer;
     private human_player humanPlayer;
     private ai_player aiPlayer;
-    private char x='X';
-    private char o='O';
+    private char humanSymbol = 'X';
+    private char aiSymbol = 'O';
+    private Move move;
 
     public Game() {
+
         this.board = new Board();
-        this.humanPlayer = new human_player(x);
-        this.aiPlayer = new ai_player(o);
-        this.currentPlayer = humanPlayer; // Definir o jogador atual como o jogador humano
+        this.humanPlayer = new human_player(humanSymbol);
+        this.aiPlayer = new ai_player(aiSymbol);
+        this.currentPlayer = humanPlayer;
     }
 
     public Board getBoard() {
@@ -29,8 +32,26 @@ public class Game {
         return aiPlayer;
     }
 
-    public void makeMove(int row, int col) {
-        currentPlayer.makeMove(board, row, col);
-        currentPlayer = (currentPlayer == humanPlayer) ? aiPlayer : humanPlayer; // Alternar jogador atual
+    public boolean makeMove(Move move) {
+        // Verifica se a posição é válida e se está vazia
+        if (board.isValidMove(move.getRow(), move.getCol()) && !board.isOccupied(move.getRow(), move.getCol())) {
+            // Faz a jogada atual
+            board.makeMove(move, currentPlayer.getSymbol());
+            // Verifica se o jogo acabou
+            if (isGameOver()) {
+                return true; // Retorna true se o jogo acabou após a jogada
+            } else {
+                // Alternar para o próximo jogador
+                currentPlayer = (currentPlayer == humanPlayer) ? aiPlayer : humanPlayer;
+            }
+            return false; // Retorna false se o jogo não acabou após a jogada
+        }
+        return false; // Retorna false se a jogada não foi válida
     }
+
+    public boolean isGameOver() {
+        // O jogo termina se o tabuleiro estiver cheio ou se houver um vencedor
+        return board.isFull() || board.checkWinner() != ' ';
+    }
+
 }

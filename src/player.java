@@ -1,5 +1,6 @@
 public abstract class player {
     private char symbol;
+    private Move move;
 
     public player(char symbol) {
         this.symbol = symbol;
@@ -9,5 +10,17 @@ public abstract class player {
         return symbol;
     }
 
-    public abstract void makeMove(Board board, int row, int col);
+    public abstract Move makeMove(Board board, Move move);
+
+    public void setSymbol(char symbol) {
+        this.symbol = symbol;
+    }
+
+    public Move getMove() {
+        return move;
+    }
+
+    public void setMove(Move move) {
+        this.move = move;
+    }
 }
