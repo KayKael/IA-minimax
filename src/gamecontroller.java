@@ -1,4 +1,6 @@
 import java.util.Currency;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class gamecontroller {
     private player current_player;
@@ -13,7 +15,7 @@ public class gamecontroller {
         this.mainPanel = mainPanel;
         this.board = game.getBoard();
         this.humanPlayer = game.getHumanPlayer();
-        this.aiPlayer = game.getAIPlayer();
+        this.aiPlayer = game.getAiPlayer();
         this.current_player = humanPlayer; // Definir o jogador atual como o jogador humano
         // Passa a matriz de botões do MainPanel para o gamecontroller
         this.mainPanel.setButtons(mainPanel.getButtons());
@@ -31,20 +33,27 @@ public class gamecontroller {
                 // Troca para o próximo jogador
                 current_player = (current_player == humanPlayer) ? aiPlayer : humanPlayer;
                 // Se o próximo jogador for a IA, faz o movimento da IA
+// Verifica se o jogador atual é uma instância de ai_player
                 if (current_player instanceof ai_player) {
-                    Move aiMove = makeAImove(move);
-                    game.makeMove(aiMove);
-                    // Verifica se o jogo acabou após o movimento da IA
-                    if (board.isGameOver()) {
+                    Move aiMove = makeAImove(move); // Faz o movimento da IA
+                    game.makeMove(aiMove); // Atualiza o jogo com o movimento da IA
+                    if (game.isGameOver()) { // Verifica se o jogo acabou após o movimento da IA
                         return null;
                     }
-                    // Troca para o próximo jogador após o movimento da IA
-                    current_player = humanPlayer;
+                    current_player = humanPlayer; // Troca para o próximo jogador após o movimento da IA
+
                     // Obtém o botão correspondente à jogada da IA
                     SquareButton button = mainPanel.getButton(aiMove.getRow(), aiMove.getCol());
                     // Chama o método updateForAI() para atualizar a aparência do botão na interface gráfica
                     button.updateForAI();
+
+                    // Simula o clique do jogador da IA no botão
+                    ActionEvent aiClick = new ActionEvent(button, ActionEvent.ACTION_PERFORMED, "");
+                    for (ActionListener listener : button.getActionListeners()) {
+                        listener.actionPerformed(aiClick);
+                    }
                 }
+
             }
         } catch (Exception e) {
             System.out.println("Erro ao fazer movimento: " + e.getMessage());
@@ -107,4 +116,13 @@ public class gamecontroller {
     public void setMainPanel(MainPanel mainPanel) {
         this.mainPanel = mainPanel;
     }
+    public player getNextPlayer() {
+        player currentPlayer = getCurrent_player();
+        if (currentPlayer == getHumanPlayer()) {
+            return getAiPlayer();
+        } else {
+            return getHumanPlayer();
+        }
+    }
+
 }

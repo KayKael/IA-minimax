@@ -27,6 +27,11 @@ public class SquareButton extends JButton {
                     setText("X");
                     // Desabilita o botão para evitar cliques adicionais
                     setEnabled(false);
+                }else{
+                    Move move = new Move(row, col); // Cria um novo movimento com as coordenadas do botão clicado
+                    game.makeMove(move);
+                    updateForAI();
+
                 }
             }
         });

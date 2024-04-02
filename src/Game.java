@@ -28,9 +28,7 @@ public class Game {
         return humanPlayer;
     }
 
-    public ai_player getAIPlayer() {
-        return aiPlayer;
-    }
+
 
     public boolean makeMove(Move move) {
         // Verifica se a posição é válida e se está vazia
@@ -54,4 +52,47 @@ public class Game {
         return board.isFull() || board.checkWinner() != ' ';
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setCurrentPlayer(player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void setHumanPlayer(human_player humanPlayer) {
+        this.humanPlayer = humanPlayer;
+    }
+
+    public ai_player getAiPlayer() {
+        return aiPlayer;
+    }
+
+    public void setAiPlayer(ai_player aiPlayer) {
+        this.aiPlayer = aiPlayer;
+    }
+
+    public char getHumanSymbol() {
+        return humanSymbol;
+    }
+
+    public void setHumanSymbol(char humanSymbol) {
+        this.humanSymbol = humanSymbol;
+    }
+
+    public char getAiSymbol() {
+        return aiSymbol;
+    }
+
+    public void setAiSymbol(char aiSymbol) {
+        this.aiSymbol = aiSymbol;
+    }
+
+    public Move getMove() {
+        return move;
+    }
+
+    public void setMove(Move move) {
+        this.move = move;
+    }
 }
