@@ -1,6 +1,8 @@
 import java.util.Currency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Random;
 
 public class gamecontroller {
     private player current_player;
@@ -32,10 +34,10 @@ public class gamecontroller {
                 }
                 // Troca para o próximo jogador
                 current_player = (current_player == humanPlayer) ? aiPlayer : humanPlayer;
-                // Se o próximo jogador for a IA, faz o movimento da IA
-// Verifica se o jogador atual é uma instância de ai_player
+
                 if (current_player instanceof ai_player) {
-                    Move aiMove = makeAImove(move); // Faz o movimento da IA
+                    // Se for a vez da IA, faz o movimento da IA diretamente
+                    Move aiMove = makeAImove();
                     game.makeMove(aiMove); // Atualiza o jogo com o movimento da IA
                     if (game.isGameOver()) { // Verifica se o jogo acabou após o movimento da IA
                         return null;
@@ -48,12 +50,11 @@ public class gamecontroller {
                     button.updateForAI();
 
                     // Simula o clique do jogador da IA no botão
-                    ActionEvent aiClick = new ActionEvent(button, ActionEvent.ACTION_PERFORMED, "");
+                    ActionEvent aiClick = new ActionEvent(button, ActionEvent.ACTION_PERFORMED, "O");
                     for (ActionListener listener : button.getActionListeners()) {
                         listener.actionPerformed(aiClick);
                     }
                 }
-
             }
         } catch (Exception e) {
             System.out.println("Erro ao fazer movimento: " + e.getMessage());
@@ -64,8 +65,11 @@ public class gamecontroller {
 
 
 
-    private Move makeAImove(Move move) {
-     return aiPlayer.makeMove(board,move);
+
+    public  Move makeAImove() {
+
+        return aiPlayer.aimakeMove(board);
+
     }
 
     public player getCurrent_player() {
@@ -119,10 +123,16 @@ public class gamecontroller {
     public player getNextPlayer() {
         player currentPlayer = getCurrent_player();
         if (currentPlayer == getHumanPlayer()) {
+            System.out.println("alterei para AI");
             return getAiPlayer();
         } else {
+            System.out.println("Alterei para Humano");
             return getHumanPlayer();
         }
+    }
+    public boolean isGameOver() {
+        // O jogo termina se o tabuleiro estiver cheio ou se houver um vencedor
+        return board.isFull() || board.checkWinner() != ' ';
     }
 
 }

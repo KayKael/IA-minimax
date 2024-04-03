@@ -11,6 +11,8 @@ public abstract class player {
     }
 
     public abstract Move makeMove(Board board, Move move);
+    public abstract Move aimakeMove(Board board);
+
 
     public void setSymbol(char symbol) {
         this.symbol = symbol;

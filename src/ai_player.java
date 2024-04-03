@@ -1,23 +1,32 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class ai_player extends player{
+public class ai_player extends player {
     private Move move;
+    private Set<Move> visitedMoves; // Manter um conjunto de movimentos visitados
+
     public ai_player(char symbol) {
         super(symbol);
+        visitedMoves = new HashSet<>();
     }
 
     @Override
-    public Move makeMove(Board board, Move bestmove) {
-        bestmove = minimax(board,getSymbol());
+    public Move makeMove(Board board, Move move) {
+        return null;
+    }
+
+
+
+    @Override
+    public Move aimakeMove(Board board) {
+        Move bestmove = minimax(board, getSymbol());
+        visitedMoves.add(bestmove); // Adicionar o melhor movimento à lista de movimentos visitados
         return bestmove;
     }
 
 
     public Move minimax(Board board, char playerSymbol) {
-        System.out.println("O minimax ta correndo");
-        // Verifique se o jogo terminou
+        // Verifica se o jogo terminou
         if (board.isGameOver()) {
             char winner = board.checkWinner();
             if (winner == this.getSymbol()) {
@@ -29,29 +38,42 @@ public class ai_player extends player{
             }
         }
 
-        // Inicialize a lista de movimentos
+        // Inicializa a lista de movimentos
         List<Move> moves = new ArrayList<>();
 
-        // Faça uma recursão para todos os movimentos possíveis
+        // Faz uma recursão para todos os movimentos possíveis
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (!board.isOccupied(i, j)) {
                     Move move = new Move(i, j);
                     board.makeMove(move, playerSymbol);
                     char nextPlayerSymbol = (playerSymbol == 'X') ? 'O' : 'X'; // Alternar o jogador
-                    move.setScore(minimax(board, nextPlayerSymbol).getScore());
+                    int score = minimax(board, nextPlayerSymbol).getScore();
+                    move.setScore(score);
                     moves.add(move);
                     board.undoMove(); // Desfaz o movimento para simular o próximo movimento
                 }
             }
         }
 
-        // Encontre o melhor movimento
-        if (playerSymbol == this.getSymbol()) {
-            return Collections.max(moves); // AIPlayer maximiza o score
-        } else {
-            return Collections.min(moves); // Oponente minimiza o score
-        }
+        // Filtra os movimentos válidos
+        List<Move> validMoves = moves.stream()
+            .filter(move -> !visitedMoves.contains(move))
+            .collect(Collectors.toList());
 
+        // Encontra o melhor movimento
+        if (!validMoves.isEmpty()) {
+            if (playerSymbol == this.getSymbol()) {
+                // AIPlayer maximiza o score
+                return Collections.max(validMoves, Comparator.comparing(Move::getScore));
+            } else {
+                // Oponente minimiza o score
+                return Collections.min(validMoves, Comparator.comparing(Move::getScore));
+            }
+        } else {
+            // Se não houver movimentos válidos, retorna um movimento inválido
+            return new Move(-100); // Valor de score arbitrário para indicar movimento inválido
+        }
     }
-    }
+}
+

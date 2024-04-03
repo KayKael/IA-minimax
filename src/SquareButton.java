@@ -30,7 +30,7 @@ public class SquareButton extends JButton {
                 }else{
                     Move move = new Move(row, col); // Cria um novo movimento com as coordenadas do botão clicado
                     game.makeMove(move);
-                    updateForAI();
+                    //updateForAI();
 
                 }
             }
