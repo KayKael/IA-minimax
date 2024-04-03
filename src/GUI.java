@@ -32,7 +32,7 @@ public class GUI {
 
     private static void startGame(gamecontroller gameController) {
         new Thread(() -> {
-            while (!gameController.getGame().isGameOver()) {
+            while (!gameController.isGameOver()) {
                 player currentPlayer = gameController.getCurrent_player();
                 if (currentPlayer instanceof human_player) {
                     // Verifica se é a vez do jogador humano
@@ -40,18 +40,17 @@ public class GUI {
                         // Aguarda a entrada do jogador humano
                         try {
                             Move move = gameController.getMainPanel().waitForHumanMove();
-                            gameController.makeMove(move);
-                            gameController.getMainPanel().updateUI();
+                            System.out.println("Movimento humano: " + move.getRow() + ", " + move.getCol());
+                            SquareButton button = gameController.getMainPanel().getButton(move.getRow(), move.getCol());
+                            button.setEnabled(false);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 } else if (currentPlayer instanceof ai_player) {
                     // Se for a vez do jogador da IA, ela faz o movimento e o jogo continua
-                    Move move = ((ai_player) currentPlayer).makeMove(gameController.getGame().getBoard(), new Move());
-                    gameController.makeMove(move);
-                    gameController.getMainPanel().updateUI();
-                    // Desabilita o botão correspondente à posição escolhida pela IA
+                    Move move = gameController.makeAImove(); // Faz o movimento da IA
+                    System.out.println("Movimento da IA: " + move.getRow() + ", " + move.getCol());
                     SquareButton button = gameController.getMainPanel().getButton(move.getRow(), move.getCol());
                     button.setEnabled(false);
                 }
@@ -60,4 +59,6 @@ public class GUI {
             }
         }).start();
     }
+
+
 }

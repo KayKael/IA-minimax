@@ -13,4 +13,8 @@ public class human_player extends player {
         return move;
     }
 
+    @Override
+    public Move aimakeMove(Board board) {
+        return null;
+    }
 }

@@ -74,26 +74,23 @@ public class MainPanel extends JPanel {
     public void updateUI() {
         System.out.println("comecei o update");
         SwingUtilities.invokeLater(() -> {
+            //atualiza o Jlabel
             turnLabel.setText("Turno: " + this.game.getCurrentPlayer().getClass().getSimpleName());
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
                     SquareButton button = buttons[row][col];
                     button.setEnabled(!game.isGameOver() && game.getCurrentPlayer() instanceof human_player);
-                    System.out.println("entrei no for");
                     // Define o texto do botão com base no estado atual do tabuleiro
                     char symbol = game.getBoard().getSymbol(row, col);
                     if (symbol != ' ') {
                         button.setText(Character.toString(symbol));
+                        System.out.println("Adicionando simbolo ao espaço escolhido");
                     }
                 }
             }
         });
     }
 
-    // Método para atualizar o JLabel com o turno e o jogador atual
-    public void updateTurnLabel() {
-        turnLabel.setText("Turno: " + this.game.getCurrentPlayer().getClass().getSimpleName()); // Atualiza o texto do JLabel com o nome da classe do jogador atual
-    }
 
     public Game getGame() {
         return game;
@@ -104,20 +101,17 @@ public class MainPanel extends JPanel {
     }
 
     public SquareButton getButton(int row, int col) {
-        Component[] components = getComponents();
-        for (Component component : components) {
-            if (component instanceof SquareButton) {
-                SquareButton button = (SquareButton) component;
-                System.out.println("Botão na posição [" + button.getRow() + "][" + button.getCol() + "]");
-                if (button.getRow() == row && button.getCol() == col) {
-                    System.out.println("Botão encontrado na posição [" + row + "][" + col + "]");
-                    return button;
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons[i].length; j++) {
+                if (buttons[i][j].getRow() == row && buttons[i][j].getCol() == col) {
+                    return buttons[i][j];
                 }
             }
         }
         System.out.println("Nenhum botão encontrado na posição [" + row + "][" + col + "]");
         return null;
     }
+
 
 
     public SquareButton[][] getButtons() {
